@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="app_name">PlusLePayLibrary</string>
+    <string name="lepay_result_Commodity">商品名称:</string>
+    <string name="lepay_result_Transaction_Number">交易单号:</string>
+    <string name="lepay_result_Closing_Time">创建时间:</string>
+    <string name="lepay_result_Payment_Method">支付方式:</string>
+    <string name="lepay_result_Success">支付成功</string>
+    <string name="lepay_getCide_topTitle">短信验证</string>
+    <string name="lepay_result_Fail">支付失败</string>
+    <string name="lepay_result_button">确定</string>
+    <string name="lepay_result_amount">支付金额：</string>
+    <string name="lepay_result_yuan">元</string>
+    <string name="lepay_cope_text">Copy right © 2016 LeChinePay</string>
+    <string name="lepay_getCode_hint">请输入短信验证码</string>
+    <string name="lepay_getCode_Send">重新发送(60)</string>
+    <string name="lepay_getCode_tip1">已发送短信至尾号为</string>
+    <string name="lepay_getCode_tip2">的手机号码</string>
+    <string name="lepay_getCode_defaultCommodity">默认信息</string>
+    <string name="lepay_getCode_orderPay">支付订单</string>
+    <string name="lepay_addCard_BankCard">银行卡</string>
+    <string name="lepay_addCard_CardNumber">卡号</string>
+    <string name="lepay_addCard_NameHint">持卡人姓名</string>
+    <string name="lepay_addCard_IdCardHint">身份证号码</string>
+    <string name="lepay_addCard_ValidityHint">信用卡有效期</string>
+    <string name="lepay_addCard_BackNumberHint">信用卡背面三位数字</string>
+    <string name="lepay_addCard_PhoneNumber">银行预留手机号</string>
+    <string name="lepay_inputCardNumber_tip">请输入本人的银行卡号:</string>
+    <string name="lepay_inputCardNumber_Hint">请输入银行卡号</string>
+    <string name="lepay_inputCardNumber_title">银行卡支付</string>
+    <string name="lepay_textview_delete">删除</string>
+    <string name="lepay_textview_cancle">取消</string>
+    <string name="lepay_text_banklist_tip">长按删除卡片</string>
+    <string name="lepay_banklist_selectCard">选择银行卡</string>
+    <string name="lepay_addcard_tongyiTip">同意</string>
+    <string name="lepay_addcard_xieyiTip">《畅捷支付用户服务协议》</string>
+</resources>

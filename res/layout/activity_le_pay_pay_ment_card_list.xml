@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="48dip"
+        android:background="#333333">
+
+        <ImageView
+            android:id="@+id/lepayIV_BackImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:padding="16dip"
+            android:src="@drawable/lepay_back_icon" />
+
+        <TextView
+            android:id="@+id/lepay_result_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/lepay_banklist_selectCard"
+            android:textColor="#ffffff"
+            android:textSize="18sp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="48dip"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
+
+        <ListView
+            android:id="@+id/lepayLTV_bankCardListView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/lepayBT_addCard_submitButton"
+            android:layout_below="@+id/lepayLTV_bankCardListView"
+            android:layout_width="match_parent"
+            android:layout_height="48dip"
+            android:background="@drawable/lepay_list_btn_add"
+            android:layout_marginTop="16dip"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/lepay_text_banklist_tip"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:layout_marginTop="16dip"
+            android:layout_below="@+id/lepayBT_addCard_submitButton"/>
+    </RelativeLayout>
+
+
+</RelativeLayout>
