@@ -23,6 +23,8 @@ import com.lechinepay.pluslepaytoolsdk.controller.LePayControllerManage;
 import com.lechinepay.pluslepaytoolsdk.controller.tools.LePayEnCodeUtil;
 import com.socks.library.KLog;
 
+import java.io.IOException;
+
 public class LePayPaymentInputCardNumberActivity extends LePayActivityManager {
 
     private String BANKCARD_NUMBER = null;
@@ -143,7 +145,16 @@ public class LePayPaymentInputCardNumberActivity extends LePayActivityManager {
             String result = null;
 
 
-            result = lePayController.queryBankName(LePayEnCodeUtil.encrypt(BANKCARD_NUMBER,Environment.getExternalStorageDirectory()+ "/LePayFile/config.cer"),payInfo.getProductCode(), LePayConfigure.LEPAY_CMPAPPID, LePayConfigure.LEPAY_MCHID);
+
+            try {
+                result = lePayController.queryBankName(LePayEnCodeUtil.encrypt(BANKCARD_NUMBER,Environment.getExternalStorageDirectory()+ "/LePayFile/config.cer"),payInfo.getProductCode(), LePayConfigure.LEPAY_CMPAPPID, LePayConfigure.LEPAY_MCHID);
+
+            }catch (Exception e){
+
+                e.printStackTrace();
+
+            }
+
 
 
             return result;

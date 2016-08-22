@@ -24,6 +24,8 @@ import com.lechinepay.pluslepay.tools.LePayTools;
 import com.lechinepay.pluslepaytoolsdk.controller.LePayControllerManage;
 import com.socks.library.KLog;
 
+import java.io.IOException;
+
 public class LePayPaymentGetCodeActivity extends LePayActivityManager {
 
     private LinearLayout lepayLV_getCode_Tip;
@@ -131,7 +133,17 @@ public class LePayPaymentGetCodeActivity extends LePayActivityManager {
 
                 if (payInfo.getBuyerId() != null) {
 
-                    new getPayPhoneCodeByBindIdAnsycTask().execute();
+                    if (payInfo.getBindId()!=null){
+
+                        new getPayPhoneCodeByBindIdAnsycTask().execute();
+
+                    }else{
+
+                        new getPayPhoneCodeAnsycTask().execute();
+
+                    }
+
+
 
                 } else {
 
@@ -168,7 +180,15 @@ public class LePayPaymentGetCodeActivity extends LePayActivityManager {
 
             time.start();
 
-            new getPayPhoneCodeByBindIdAnsycTask().execute();
+            if (payInfo.getBindId()!=null){
+
+                new getPayPhoneCodeByBindIdAnsycTask().execute();
+
+            }else{
+
+                new getPayPhoneCodeAnsycTask().execute();
+
+            }
 
         } else {
             time.start();
@@ -212,7 +232,13 @@ public class LePayPaymentGetCodeActivity extends LePayActivityManager {
 
             LePayControllerManage lePayControllerManage = new LePayControllerManage();
 
-            result = lePayControllerManage.submitQuickPaymentOrder("1.0.0", "UTF-8", "", LePayConfigure.LEPAY_MCHID, LePayConfigure.LEPAY_CMPAPPID, payInfo.getTradeNo(), payInfo.getToken(), payInfo.getProductCode(), verifyCode, payTypeTradeNo);
+            try {
+
+                result = lePayControllerManage.submitQuickPaymentOrder("1.0.0", "UTF-8", "", LePayConfigure.LEPAY_MCHID, LePayConfigure.LEPAY_CMPAPPID, payInfo.getTradeNo(), payInfo.getToken(), payInfo.getProductCode(), verifyCode, payTypeTradeNo);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
 
             return result;
         }
@@ -273,8 +299,14 @@ public class LePayPaymentGetCodeActivity extends LePayActivityManager {
             LePayControllerManage lePayControllerManage = new LePayControllerManage();
 
             String dbcr = payInfo.getDbcr();
+            try {
+                result = lePayControllerManage.getSMSVerificationCode("1.0.0", "UTF-8", "", LePayConfigure.LEPAY_MCHID, LePayConfigure.LEPAY_CMPAPPID, payInfo.getTradeNo(), payInfo.getToken(), payInfo.getProductCode(), payInfo.getBankCardNo(), payInfo.getIdName(), payInfo.getIdCardNo(), payInfo.getMobile(), payInfo.getCardYear(), payInfo.getCardMonth(), payInfo.getCvNum(),dbcr);
 
-            result = lePayControllerManage.getSMSVerificationCode("1.0.0", "UTF-8", "", LePayConfigure.LEPAY_MCHID, LePayConfigure.LEPAY_CMPAPPID, payInfo.getTradeNo(), payInfo.getToken(), payInfo.getProductCode(), payInfo.getBankCardNo(), payInfo.getIdName(), payInfo.getIdCardNo(), payInfo.getMobile(), payInfo.getCardYear(), payInfo.getCardMonth(), payInfo.getCvNum(),dbcr);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+
 
             return result;
 
@@ -324,7 +356,12 @@ public class LePayPaymentGetCodeActivity extends LePayActivityManager {
 
             LePayControllerManage lePayControllerManage = new LePayControllerManage();
 
-            result = lePayControllerManage.getSMSVerificationCodeByBindId("1.0.0", "UTF-8", "", LePayConfigure.LEPAY_MCHID, LePayConfigure.LEPAY_CMPAPPID, payInfo.getTradeNo(), payInfo.getToken(), payInfo.getProductCode());
+            try {
+                result = lePayControllerManage.getSMSVerificationCodeByBindId("1.0.0", "UTF-8", "", LePayConfigure.LEPAY_MCHID, LePayConfigure.LEPAY_CMPAPPID, payInfo.getTradeNo(), payInfo.getToken(), payInfo.getProductCode(),payInfo.getBindId());
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
 
 
             return result;

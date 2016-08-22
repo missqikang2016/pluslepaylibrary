@@ -237,6 +237,7 @@ public class LePayPaymentCardAddActivity extends LePayActivityManager {
 
                 lepayBT_addCard_submitButton.setEnabled(false);
                 if (payInfo.getBuyerId()==null||payInfo.getBuyerId().equals("")){
+                    payInfo.setIdCardNo(lepayET_addCard_IdCard.getText().toString().trim());
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("payInfo", payInfo);
                     LePayTools.GotoActivityByBundle(LePayPaymentCardAddActivity.this, LePayPaymentGetCodeActivity.class, bundle);
@@ -275,9 +276,13 @@ public class LePayPaymentCardAddActivity extends LePayActivityManager {
             LePayControllerManage lePayControllerManage = new LePayControllerManage();
 
             try {
+                try {
 
-                KLog.d(payInfo.getCompanyPersonal()+","+ payInfo.getInstId()+","+ payInfo.getInstCode()+","+ payInfo.getBankCardName()+","+ payInfo.getDbcr());
-                result = lePayControllerManage.addBankCard(LePayConfigure.LEPAY_MCHID, LePayConfigure.LEPAY_CMPAPPID, payInfo.getBuyerId(),LePayEnCodeUtil.encrypt(payInfo.getBankCardNo(),Environment.getExternalStorageDirectory()+ "/LePayFile/config.cer"), payInfo.getMobile(), LePayConfigure.LEPAY_MCHID, payInfo.getIdName(), payInfo.getIdCardNo(), payInfo.getCardYear(), payInfo.getCardMonth(), payInfo.getCvNum(), payInfo.getCompanyPersonal(), payInfo.getInstId(), payInfo.getInstCode(), payInfo.getBankCardName(), payInfo.getDbcr());
+                    KLog.d(payInfo.getCompanyPersonal()+","+ payInfo.getInstId()+","+ payInfo.getInstCode()+","+ payInfo.getBankCardName()+","+ payInfo.getDbcr());
+                    result = lePayControllerManage.addBankCard(LePayConfigure.LEPAY_MCHID, LePayConfigure.LEPAY_CMPAPPID, payInfo.getBuyerId(),LePayEnCodeUtil.encrypt(payInfo.getBankCardNo(),Environment.getExternalStorageDirectory()+ "/LePayFile/config.cer"), payInfo.getMobile(), LePayConfigure.LEPAY_MCHID, payInfo.getIdName(), payInfo.getIdCardNo(), payInfo.getCardYear(), payInfo.getCardMonth(), payInfo.getCvNum(), payInfo.getCompanyPersonal(), payInfo.getInstId(), payInfo.getInstCode(), payInfo.getBankCardName(), payInfo.getDbcr());
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
 
             }catch (Exception e){
                 e.printStackTrace();
@@ -300,7 +305,7 @@ public class LePayPaymentCardAddActivity extends LePayActivityManager {
                 if (lePayAddBankCardResultBean != null) {
 
                     if (lePayAddBankCardResultBean.getStatus() == 1) {
-
+                        payInfo.setIdCardNo(lepayET_addCard_IdCard.getText().toString().trim());
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("payInfo", payInfo);
                         LePayTools.GotoActivityByBundle(LePayPaymentCardAddActivity.this, LePayPaymentGetCodeActivity.class, bundle);

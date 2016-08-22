@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -25,7 +24,6 @@ import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -204,9 +202,20 @@ public class LePayChannelsPay {
 
             LePayControllerManage lePayControllerManage = new LePayControllerManage();
 
-                String result = lePayControllerManage.queryQuickPaymentBankCards(LePayConfigure.LEPAY_MCHID, LePayConfigure.LEPAY_CMPAPPID, mLePayOrderInfoEntity.getBuyerId());
+            String result = null;
 
-                return result;
+            try {
+                result = lePayControllerManage.queryQuickPaymentBankCards(LePayConfigure.LEPAY_MCHID, LePayConfigure.LEPAY_CMPAPPID, mLePayOrderInfoEntity.getBuyerId());
+
+            }catch (Exception e){
+                mChannelsPayListener.OnChannelsPayEnd(result);
+                e.printStackTrace();
+
+            }
+
+
+
+            return result;
 
         }
 
@@ -257,6 +266,7 @@ public class LePayChannelsPay {
                 }
 
 
+            }else{
 
 
 

@@ -336,10 +336,14 @@ public class LePayTools {
 
         Date date;
         try {
-            SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMddhhmmss");
-            date = (Date) sdf1.parse(dateString);
-            SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒");
-            dateStr = sdf2.format(date);
+            if (dateString!=null&&!dateString.equals("null")){
+
+                SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMddhhmmss");
+                date = (Date) sdf1.parse(dateString);
+                SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒");
+                dateStr = sdf2.format(date);
+            }
+
         } catch (ParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

@@ -8,8 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.socks.library.KLog;
-
 /**
  * 实现：activity 管理类
  * 作者：thomson King on 2016/8/16 0016 11:55
@@ -53,7 +51,7 @@ public class LePayActivityManager extends Activity {
     public static void destoryActivity(String activityName) {
         Set<String> keySet = destoryMap.keySet();
         for (String key : keySet) {
-            KLog.d(key);
+
             destoryMap.get(activityName).finish();
         }
     }

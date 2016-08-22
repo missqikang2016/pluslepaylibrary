@@ -21,6 +21,7 @@ import com.lechinepay.pluslepaytoolsdk.controller.LePayControllerManage;
 import com.zhy.adapter.abslistview.CommonAdapter;
 import com.zhy.adapter.abslistview.ViewHolder;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -118,7 +119,14 @@ public class LePayPayMentCardListActivity extends LePayActivityManager {
 
             LePayControllerManage lePayControllerManage = new LePayControllerManage();
 
-            String result = lePayControllerManage.queryQuickPaymentBankCards(LePayConfigure.LEPAY_MCHID, LePayConfigure.LEPAY_CMPAPPID, payInfo.getBuyerId());
+            String result = null;
+            try {
+
+                result = lePayControllerManage.queryQuickPaymentBankCards(LePayConfigure.LEPAY_MCHID, LePayConfigure.LEPAY_CMPAPPID, payInfo.getBuyerId());
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
 
             return result;
 
@@ -280,8 +288,13 @@ public class LePayPayMentCardListActivity extends LePayActivityManager {
             String result = null;
 
             LePayController lePayControllerManage = new LePayControllerManage();
+            try {
 
-            result = lePayControllerManage.deleteQuickPaymentCard(bindId);
+                result = lePayControllerManage.deleteQuickPaymentCard(bindId);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
 
 
             return result;

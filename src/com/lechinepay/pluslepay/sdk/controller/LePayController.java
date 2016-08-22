@@ -14,6 +14,7 @@ import com.lechinepay.pluslepay.sdk.listener.LePaySendPayCallBack;
 import com.lechinepay.pluslepay.sdk.pay.LePayChannelsPay;
 import com.lechinepay.pluslepay.tools.LePayLogTool;
 import com.lechinepay.pluslepay.tools.LePayTools;
+import com.lechinepay.pluslepaytoolsdk.controller.config.LePayDataPool;
 import com.socks.library.KLog;
 
 /**
@@ -31,16 +32,18 @@ public class LePayController {
      * 方法参数: MCHID，CMPAPPID
      * 作者: Thomson King(ouqikang@unionpay95516.com)
      * @return boolean
+     * @param scienceType 1=自验https，2=自验http，3=测试https，4=测试http
      * FIXME
      */
 
-    public static boolean initLePayController(Context context, String MCHID, String CMPAPPID, boolean isDeBug) {
+    public static boolean initLePayController(Context context, String MCHID, String CMPAPPID, boolean isDeBug,int scienceType) {
 
         boolean isInit = false;
         LePayConfigure.LEPAY_MCHID = MCHID;
         LePayConfigure.LEPAY_CMPAPPID = CMPAPPID;
         LePayConfigure.LEPAY_CONTEXT = context;
         KLog.init(isDeBug);
+        LePayDataPool.setLePayURL(scienceType);
         try {
             LePayTools.saveToSDCard();
             isInit = true;
@@ -95,21 +98,29 @@ public class LePayController {
                             @Override
                             public void OnChannelsPayEnd(String result) {
 
-                                Gson gson = new Gson();
+                                if (result != null){
 
-                                LePayResultEntity lePayResultEntity = gson.fromJson(result, LePayResultEntity.class);
+                                    Gson gson = new Gson();
 
-                                if (lePayResultEntity.getRespCode() == 0) {
+                                    LePayResultEntity lePayResultEntity = gson.fromJson(result, LePayResultEntity.class);
 
-                                    lePaySendPayCallBack.OnPayFinished(lePayOrderInfoEntity.getPayType(), true, result);
+                                    if (lePayResultEntity.getRespCode() == 0) {
 
-                                } else {
+                                        lePaySendPayCallBack.OnPayFinished(lePayOrderInfoEntity.getPayType(), true, result);
 
-                                    lePaySendPayCallBack.OnPayFinished(lePayOrderInfoEntity.getPayType(), false, result);
+                                    } else {
 
+                                        lePaySendPayCallBack.OnPayFinished(lePayOrderInfoEntity.getPayType(), false, result);
+
+                                    }
+
+                                    KLog.d("支付结束，支付结果=" + result);
+
+                                }else{
+                                    lePaySendPayCallBack.OnPayFinished(lePayOrderInfoEntity.getPayType(), false, LePayTools.setResultInfo("777", "获取失败", 777, "服务器异常"));
                                 }
 
-                                KLog.d("支付结束，支付结果=" + result);
+
 
                             }
                         });

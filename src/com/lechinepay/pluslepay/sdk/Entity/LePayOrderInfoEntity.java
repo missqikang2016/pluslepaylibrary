@@ -1,5 +1,10 @@
 package com.lechinepay.pluslepay.sdk.Entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.lechinepay.pluslepay.sdk.listener.ChannelsPayListener;
+
 import java.io.Serializable;
 
 /**
