@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.lechinepay.pluslepay.R;
@@ -27,6 +28,10 @@ public class LePayPaymentResultActivity extends LePayActivityManager {
     private LePayOrderInfoEntity payInfo;
 
     private LePayQuickPayResultBean payResult = null;
+
+    private TextView lepayTV_paymentStatus;
+
+    private LinearLayout lepayLV_Result_Status;
 
 
 
@@ -58,6 +63,10 @@ public class LePayPaymentResultActivity extends LePayActivityManager {
     }
 
     private void initView() {
+
+        lepayLV_Result_Status = (LinearLayout) findViewById(R.id.lepayLV_Result_Status);
+
+        lepayTV_paymentStatus = (TextView) findViewById(R.id.lepayTV_paymentStatus);
 
         lepayTV_commodityName = (TextView) findViewById(R.id.lepayTV_commodityName);
 
@@ -116,14 +125,31 @@ public class LePayPaymentResultActivity extends LePayActivityManager {
         }
 
         if (payResult != null) {
+
+            lepayLV_Result_Status.setVisibility(View.VISIBLE);
+
+            String status = "";
+
+            if (payResult.getTranStatus() !=null && payResult.getTranStatus().equals("S")){
+
+                status = "支付成功";
+
+            }else{
+
+                status = "支付处理中";
+
+            }
+            lepayTV_paymentStatus.setText(status);
+
             if (payResult.getRespCode().equals("000000")) {
 
-                lepay_result_title.setText("支付成功");
-                LePayConfigure.CHANNELSPAYLISTENNER.OnChannelsPayEnd(LePayTools.setResultInfo("0",payInfo.getPayChnlType(), 0, "支付成功"));
+                lepay_result_title.setText("交易成功");
+                LePayConfigure.CHANNELSPAYLISTENNER.OnChannelsPayEnd(LePayTools.setResultInfo("0",payInfo.getPayChnlType(), 0, status));
 
             } else {
-
-                lepay_result_title.setText("支付失败");
+                lepayTV_paymentStatus.setText("支付失败");
+                lepayTV_paymentStatus.setTextColor(Color.RED);
+                lepay_result_title.setText("交易失败");
                 lepayTV_amount.setTextColor(Color.RED);
                 LePayConfigure.CHANNELSPAYLISTENNER.OnChannelsPayEnd(LePayTools.setResultInfo("-1",payInfo.getPayChnlType(), -1, payResult.getRespMsg()));
 

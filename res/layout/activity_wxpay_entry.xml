@@ -133,6 +133,31 @@
                 android:textColor="#000000"
                 android:textSize="16sp" />
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lepayLV_Result_Status"
+            android:layout_width="match_parent"
+            android:layout_height="30dip"
+            android:visibility="gone"
+            android:gravity="left|center">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:text="@string/lepay_result_Payment_Status"
+                android:textColor="#a1a1a1"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/lepayTV_paymentStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:singleLine="true"
+                android:textColor="#62c455"
+                android:textSize="16sp" />
+        </LinearLayout>
     </LinearLayout>
 
     <ImageView

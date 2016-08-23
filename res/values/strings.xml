@@ -6,6 +6,7 @@
     <string name="lepay_result_Transaction_Number">交易单号:</string>
     <string name="lepay_result_Closing_Time">创建时间:</string>
     <string name="lepay_result_Payment_Method">支付方式:</string>
+    <string name="lepay_result_Payment_Status">支付状态:</string>
     <string name="lepay_result_Success">支付成功</string>
     <string name="lepay_getCide_topTitle">短信验证</string>
     <string name="lepay_result_Fail">支付失败</string>

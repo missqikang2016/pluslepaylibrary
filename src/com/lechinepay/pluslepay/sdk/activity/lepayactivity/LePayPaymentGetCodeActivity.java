@@ -176,6 +176,12 @@ public class LePayPaymentGetCodeActivity extends LePayActivityManager {
             }
         });
 
+        getCode();
+
+
+    }
+
+    private void getCode(){
         if (payInfo.getBuyerId() != null) {
 
             time.start();
@@ -196,8 +202,6 @@ public class LePayPaymentGetCodeActivity extends LePayActivityManager {
             new getPayPhoneCodeAnsycTask().execute();
 
         }
-
-
     }
 
 
@@ -232,12 +236,19 @@ public class LePayPaymentGetCodeActivity extends LePayActivityManager {
 
             LePayControllerManage lePayControllerManage = new LePayControllerManage();
 
-            try {
+            if(payTypeTradeNo!=null){
+                try {
 
-                result = lePayControllerManage.submitQuickPaymentOrder("1.0.0", "UTF-8", "", LePayConfigure.LEPAY_MCHID, LePayConfigure.LEPAY_CMPAPPID, payInfo.getTradeNo(), payInfo.getToken(), payInfo.getProductCode(), verifyCode, payTypeTradeNo);
-            }catch (Exception e){
-                e.printStackTrace();
+                    result = lePayControllerManage.submitQuickPaymentOrder("1.0.0", "UTF-8", "", LePayConfigure.LEPAY_MCHID, LePayConfigure.LEPAY_CMPAPPID, payInfo.getTradeNo(), payInfo.getToken(), payInfo.getProductCode(), verifyCode, payTypeTradeNo);
+
+                }catch (Exception e){
+
+                    e.printStackTrace();
+
+                }
             }
+
+
 
 
             return result;
@@ -276,6 +287,10 @@ public class LePayPaymentGetCodeActivity extends LePayActivityManager {
                     Toast.makeText(LePayPaymentGetCodeActivity.this, "参数错误或系统连接失败", Toast.LENGTH_LONG).show();
 
                 }
+            }else{
+
+                Toast.makeText(LePayPaymentGetCodeActivity.this, "参数错误或系统连接失败", Toast.LENGTH_LONG).show();
+
             }
 
 
@@ -331,6 +346,11 @@ public class LePayPaymentGetCodeActivity extends LePayActivityManager {
 
                     } else {
                         Toast.makeText(LePayPaymentGetCodeActivity.this, "短信发送失败", Toast.LENGTH_LONG).show();
+                        time.cancel();
+                        lepayBT_getCode_ReSend.setText("发送验证码");
+                        lepayBT_getCode_ReSend.setClickable(true);
+                        lepayBT_getCode_ReSend.setBackgroundResource(R.drawable.lepay_btn_green);
+                        lepayLV_getCode_Tip.setVisibility(View.GONE);
                     }
 
                 }
@@ -388,6 +408,12 @@ public class LePayPaymentGetCodeActivity extends LePayActivityManager {
 
                     } else {
                         Toast.makeText(LePayPaymentGetCodeActivity.this, "短信发送失败", Toast.LENGTH_LONG).show();
+                        time.cancel();
+                        lepayBT_getCode_ReSend.setText("发送验证码");
+                        lepayBT_getCode_ReSend.setClickable(true);
+                        lepayBT_getCode_ReSend.setBackgroundResource(R.drawable.lepay_btn_green);
+                        lepayLV_getCode_Tip.setVisibility(View.GONE);
+
                     }
 
                 }
