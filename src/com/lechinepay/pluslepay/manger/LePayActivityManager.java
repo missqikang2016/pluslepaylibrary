@@ -39,9 +39,10 @@ public class LePayActivityManager extends Activity {
      * 销毁所有Activity
      */
     public static void destoryActivity() {
-        Set<String> keySet = destoryMap.keySet();
-        for (String key : keySet) {
-            destoryMap.get(key).finish();
+        for (Map.Entry<String,Activity> entry : destoryMap.entrySet()){
+
+            entry.getValue().finish();
+
         }
     }
 

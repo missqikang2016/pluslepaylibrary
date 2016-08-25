@@ -17,6 +17,8 @@ import com.lechinepay.pluslepay.tools.LePayTools;
 import com.lechinepay.pluslepaytoolsdk.controller.config.LePayDataPool;
 import com.socks.library.KLog;
 
+import java.io.IOException;
+
 /**
  * +LePay控制器类
  * 实现：提供给用户进行支付接口调用，封装了initLePayController方法进行初始化控制器，
@@ -47,8 +49,8 @@ public class LePayController {
         try {
             LePayTools.saveToSDCard();
             isInit = true;
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
             Log.e("LePaySDK", "初始化失败");
         }
         LePayConfigure.ISINITCONTROLLER = isInit;

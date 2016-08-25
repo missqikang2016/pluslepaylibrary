@@ -4,8 +4,10 @@ import android.app.Dialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -96,7 +98,7 @@ public class LePayPayMentCardListActivity extends LePayActivityManager {
 
         Bundle bundle = new Bundle();
         bundle.putSerializable("payInfo", payInfo);
-        LePayTools.GotoActivityByBundle(LePayPayMentCardListActivity.this, LePayPaymentInputCardNumberActivity.class, bundle);
+        LePayTools.gotoActivityByBundle(LePayPayMentCardListActivity.this, LePayPaymentInputCardNumberActivity.class, bundle);
 
     }
 
@@ -216,7 +218,7 @@ public class LePayPayMentCardListActivity extends LePayActivityManager {
 
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("payInfo", payInfo);
-                        LePayTools.GotoActivityByBundle(LePayPayMentCardListActivity.this, LePayPaymentGetCodeActivity.class, bundle);
+                        LePayTools.gotoActivityByBundle(LePayPayMentCardListActivity.this, LePayPaymentGetCodeActivity.class, bundle);
 
                     }
                 });
@@ -268,7 +270,28 @@ public class LePayPayMentCardListActivity extends LePayActivityManager {
 
         commonAdapter.notifyDataSetChanged();
 
+        setListViewHeightBasedOnChildren(lepayLTV_bankCardListView);
 
+
+    }
+
+    private void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            return;
+        }
+
+        int totalHeight = 0;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        params.height += 5;//if without this statement,the listview will be a little short
+        listView.setLayoutParams(params);
     }
 
     private void deleteBankCard(String bindId) {

@@ -1,7 +1,6 @@
 package com.lechinepay.pluslepay.sdk.activity.lepayactivity;
 
 import android.app.Dialog;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
@@ -16,13 +15,9 @@ import com.lechinepay.pluslepay.R;
 import com.lechinepay.pluslepay.configure.LePayConfigure;
 import com.lechinepay.pluslepay.manger.LePayActivityManager;
 import com.lechinepay.pluslepay.sdk.Entity.LePayOrderInfoEntity;
-import com.lechinepay.pluslepay.sdk.json.LePayJsonFuncation;
-import com.lechinepay.pluslepay.sdk.json.resultentity.LePayAddBankCardResultBean;
 import com.lechinepay.pluslepay.sdk.view.DataPickerDialogView;
 import com.lechinepay.pluslepay.tools.LePayTools;
-import com.lechinepay.pluslepaytoolsdk.controller.LePayControllerManage;
 import com.lechinepay.pluslepaytoolsdk.controller.tools.LePayEnCodeUtil;
-import com.socks.library.KLog;
 
 import java.util.Calendar;
 
@@ -86,7 +81,7 @@ public class LePayPaymentCardAddActivity extends LePayActivityManager {
 
         }
 
-        dialog = LePayTools.createLoadingDialog(LePayConfigure.LEPAY_CONTEXT,"");
+        dialog = LePayTools.createLoadingDialog(LePayConfigure.LEPAY_CONTEXT, "");
 
     }
 
@@ -101,7 +96,7 @@ public class LePayPaymentCardAddActivity extends LePayActivityManager {
                 Bundle bundle = new Bundle();
                 bundle.putString(LePayWebActivity.INTENT_KEY_TITLE, "");
                 bundle.putString(LePayWebActivity.INTENT_KEY_URL, "http://lechinepay.com/agreenment/kuaijie.html");
-                LePayTools.GotoActivityByBundle(LePayPaymentCardAddActivity.this,LePayWebActivity.class,bundle);
+                LePayTools.gotoActivityByBundle(LePayPaymentCardAddActivity.this, LePayWebActivity.class, bundle);
 
             }
         });
@@ -112,15 +107,14 @@ public class LePayPaymentCardAddActivity extends LePayActivityManager {
             @Override
             public void onClick(View view) {
 
-                if (isChecked){
+                if (isChecked) {
 
                     isChecked = false;
 
                     lepayIV_AddCard_checkbox.setImageResource(R.drawable.radio_n);
 
 
-
-                }else{
+                } else {
 
                     isChecked = true;
 
@@ -147,6 +141,8 @@ public class LePayPaymentCardAddActivity extends LePayActivityManager {
         lepayTV_bankCard_cardNumber = (TextView) findViewById(R.id.lepayTV_bankCard_cardNumber);
 
         lepayTV_bankCard_cardNumber.setText(payInfo.getBankCardNo());
+
+        payInfo.setBankCardNo(LePayEnCodeUtil.encrypt(payInfo.getBankCardNo(), Environment.getExternalStorageDirectory() + "/LePayFile/config.cer"));
 
         lepayET_addCard_Name = (EditText) findViewById(R.id.lepayET_addCard_Name);
 
@@ -222,111 +218,97 @@ public class LePayPaymentCardAddActivity extends LePayActivityManager {
                     return;
                 }
 
-                if (!isChecked){
+                if (!isChecked) {
                     Toast.makeText(LePayPaymentCardAddActivity.this, "请先阅读并同意畅捷支付服务协议", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 payInfo.setIdName(lepayET_addCard_Name.getText().toString().trim());
-                payInfo.setIdCardNo(LePayEnCodeUtil.encrypt(lepayET_addCard_IdCard.getText().toString().trim(), Environment.getExternalStorageDirectory()+ "/LePayFile/config.cer"));
+                payInfo.setIdCardNo(LePayEnCodeUtil.encrypt(lepayET_addCard_IdCard.getText().toString().trim(), Environment.getExternalStorageDirectory() + "/LePayFile/config.cer"));
+
                 payInfo.setMobile(lepayET_addCard_Phone.getText().toString().trim());
                 payInfo.setCardYear(DATA_YEAR);
                 payInfo.setCardMonth(DATA_MONTH);
                 payInfo.setCvNum(lepayET_addCard_BackNumber.getText().toString().trim());
 
-
-                lepayBT_addCard_submitButton.setEnabled(false);
-                if (payInfo.getBuyerId()==null||payInfo.getBuyerId().equals("")){
-                    payInfo.setIdCardNo(lepayET_addCard_IdCard.getText().toString().trim());
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("payInfo", payInfo);
-                    LePayTools.GotoActivityByBundle(LePayPaymentCardAddActivity.this, LePayPaymentGetCodeActivity.class, bundle);
-
-                }else{
-
-                    new AddQuickBankCardAnsycTask().execute();
-
-                }
-
-
-
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("payInfo", payInfo);
+                LePayTools.gotoActivityByBundle(LePayPaymentCardAddActivity.this, LePayPaymentGetCodeActivity.class, bundle);
             }
         });
 
     }
 
-    private class AddQuickBankCardAnsycTask extends AsyncTask<String, Integer, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            if (dialog!=null&&!dialog.isShowing()){
-
-                dialog.show();
-
-            }
-
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            String result = null;
-
-            LePayControllerManage lePayControllerManage = new LePayControllerManage();
-
-            try {
-                try {
-
-                    KLog.d(payInfo.getCompanyPersonal()+","+ payInfo.getInstId()+","+ payInfo.getInstCode()+","+ payInfo.getBankCardName()+","+ payInfo.getDbcr());
-                    result = lePayControllerManage.addBankCard(LePayConfigure.LEPAY_MCHID, LePayConfigure.LEPAY_CMPAPPID, payInfo.getBuyerId(),LePayEnCodeUtil.encrypt(payInfo.getBankCardNo(),Environment.getExternalStorageDirectory()+ "/LePayFile/config.cer"), payInfo.getMobile(), LePayConfigure.LEPAY_MCHID, payInfo.getIdName(), payInfo.getIdCardNo(), payInfo.getCardYear(), payInfo.getCardMonth(), payInfo.getCvNum(), payInfo.getCompanyPersonal(), payInfo.getInstId(), payInfo.getInstCode(), payInfo.getBankCardName(), payInfo.getDbcr());
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-
-
-            return result;
-
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            lepayBT_addCard_submitButton.setEnabled(true);
-            if (dialog!=null&&dialog.isShowing())
-                dialog.cancel();
-
-            if (result!=null){
-                LePayAddBankCardResultBean lePayAddBankCardResultBean = LePayJsonFuncation.AddBankCard(result);
-                if (lePayAddBankCardResultBean != null) {
-
-                    if (lePayAddBankCardResultBean.getStatus() == 1) {
-                        payInfo.setIdCardNo(lepayET_addCard_IdCard.getText().toString().trim());
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("payInfo", payInfo);
-                        LePayTools.GotoActivityByBundle(LePayPaymentCardAddActivity.this, LePayPaymentGetCodeActivity.class, bundle);
-                        destoryActivity();
-
-                    } else {
-
-                        Toast.makeText(LePayPaymentCardAddActivity.this, lePayAddBankCardResultBean.getMessage(), Toast.LENGTH_LONG).show();
-
-                    }
-
-                }
-            }else{
-
-                Toast.makeText(LePayPaymentCardAddActivity.this, "参数错误或系统连接失败", Toast.LENGTH_LONG).show();
-
-            }
-
-
-
-        }
-    }
+//    private class AddQuickBankCardAnsycTask extends AsyncTask<String, Integer, String> {
+//
+//        @Override
+//        protected void onPreExecute() {
+//            super.onPreExecute();
+//            if (dialog!=null&&!dialog.isShowing()){
+//
+//                dialog.show();
+//
+//            }
+//
+//        }
+//
+//        @Override
+//        protected String doInBackground(String... params) {
+//
+//            String result = null;
+//
+//            LePayControllerManage lePayControllerManage = new LePayControllerManage();
+//
+//            try {
+//                try {
+//
+//                    result = lePayControllerManage.addBankCard(LePayConfigure.LEPAY_MCHID, LePayConfigure.LEPAY_CMPAPPID, payInfo.getBuyerId(),payInfo.getBankCardNo(), payInfo.getMobile(), LePayConfigure.LEPAY_MCHID, payInfo.getIdName(), payInfo.getIdCardNo(), payInfo.getCardYear(), payInfo.getCardMonth(), payInfo.getCvNum(), payInfo.getCompanyPersonal(), payInfo.getInstId(), payInfo.getInstCode(), payInfo.getBankCardName(), payInfo.getDbcr());
+//                }catch (Exception e){
+//                    e.printStackTrace();
+//                }
+//
+//            }catch (Exception e){
+//                e.printStackTrace();
+//            }
+//
+//
+//            return result;
+//
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            super.onPostExecute(result);
+//            lepayBT_addCard_submitButton.setEnabled(true);
+//            if (dialog!=null&&dialog.isShowing())
+//                dialog.cancel();
+//
+//            if (result!=null){
+//                LePayAddBankCardResultBean lePayAddBankCardResultBean = LePayJsonFuncation.AddBankCard(result);
+//                if (lePayAddBankCardResultBean != null) {
+//
+//                    if (lePayAddBankCardResultBean.getStatus() == 1) {
+//                        Bundle bundle = new Bundle();
+//                        bundle.putSerializable("payInfo", payInfo);
+//                        LePayTools.gotoActivityByBundle(LePayPaymentCardAddActivity.this, LePayPaymentGetCodeActivity.class, bundle);
+//                        destoryActivity();
+//
+//                    } else {
+//
+//                        Toast.makeText(LePayPaymentCardAddActivity.this, lePayAddBankCardResultBean.getMessage(), Toast.LENGTH_LONG).show();
+//
+//                    }
+//
+//                }
+//            }else{
+//
+//                Toast.makeText(LePayPaymentCardAddActivity.this, "参数错误或系统连接失败", Toast.LENGTH_LONG).show();
+//
+//            }
+//
+//
+//
+//        }
+//    }
 
 }

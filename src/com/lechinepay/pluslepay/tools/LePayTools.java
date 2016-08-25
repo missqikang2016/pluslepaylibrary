@@ -9,8 +9,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -28,6 +26,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -50,29 +49,38 @@ public class LePayTools {
      * FIXME
      */
 
-    public static void saveToSDCard() throws Throwable {
-        InputStream inStream = LePayConfigure.LEPAY_CONTEXT.getResources().openRawResource(R.raw.testserver);
+    public static void saveToSDCard() throws IOException {
+        try {
 
-        File file = new File(Environment.getExternalStorageDirectory()+ "/LePayFile");
-        if (file.exists()){
+            InputStream inStream = LePayConfigure.LEPAY_CONTEXT.getResources().openRawResource(R.raw.pdtserver);
 
-        }else{
-            file.mkdir();
-            file = new File(Environment.getExternalStorageDirectory()+"/LePayFile/", "config.cer");
-            FileOutputStream fileOutputStream = new FileOutputStream(file);//存入SDCard
-            byte[] buffer = new byte[10];
-            ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-            int len = 0;
-            while((len = inStream.read(buffer)) != -1) {
-                outStream.write(buffer, 0, len);
+            File file = new File(Environment.getExternalStorageDirectory() + "/LePayFile");
+            if (file.exists()) {
+
+            } else {
+                file.mkdir();
+                file = new File(Environment.getExternalStorageDirectory() + "/LePayFile/", "config.cer");
+                FileOutputStream fileOutputStream = new FileOutputStream(file);//存入SDCard
+                byte[] buffer = new byte[10];
+                ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+                int len = 0;
+                while ((len = inStream.read(buffer)) != -1) {
+                    outStream.write(buffer, 0, len);
+                }
+                byte[] bs = outStream.toByteArray();
+                fileOutputStream.write(bs);
+                outStream.close();
+                inStream.close();
+                fileOutputStream.flush();
+                fileOutputStream.close();
             }
-            byte[] bs = outStream.toByteArray();
-            fileOutputStream.write(bs);
-            outStream.close();
-            inStream.close();
-            fileOutputStream.flush();
-            fileOutputStream.close();
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+
         }
+
 
     }
 
@@ -96,10 +104,10 @@ public class LePayTools {
                     lePayOrderInfoEntity.setAmount(CHARGEJSON.getString("amount"));
                 if (CHARGEJSON.has("appOrderInfo"))
                     lePayOrderInfoEntity.setAppOrderInfo(CHARGEJSON.getString("appOrderInfo").replace("\\", ""));
-                if (lePayOrderInfoEntity.getAppOrderInfo()!=null)
-                    lePayOrderInfoEntity.setToken(getparams("token",lePayOrderInfoEntity.getAppOrderInfo(),CHARGEJSON.getString("payChnlType")));
-                if (lePayOrderInfoEntity.getAppOrderInfo()!=null)
-                    lePayOrderInfoEntity.setProductCode(getparams("productCode",lePayOrderInfoEntity.getAppOrderInfo(),CHARGEJSON.getString("payChnlType")));
+                if (lePayOrderInfoEntity.getAppOrderInfo() != null)
+                    lePayOrderInfoEntity.setToken(getparams("token", lePayOrderInfoEntity.getAppOrderInfo(), CHARGEJSON.getString("payChnlType")));
+                if (lePayOrderInfoEntity.getAppOrderInfo() != null)
+                    lePayOrderInfoEntity.setProductCode(getparams("productCode", lePayOrderInfoEntity.getAppOrderInfo(), CHARGEJSON.getString("payChnlType")));
                 if (CHARGEJSON.has("startTime"))
                     lePayOrderInfoEntity.setStartTime(getFormatDate(CHARGEJSON.getString("startTime")));
                 if (CHARGEJSON.has("summary"))
@@ -108,7 +116,7 @@ public class LePayTools {
                     lePayOrderInfoEntity.setTradeNo(CHARGEJSON.getString("outTradeNo"));
                 if (CHARGEJSON.has("payChnlType")) {
                     lePayOrderInfoEntity.setPayChnlType(CHARGEJSON.getString("payChnlType"));
-                    if (CHARGEJSON.getString("payChnlType").length() > 0){
+                    if (CHARGEJSON.getString("payChnlType").length() > 0) {
                         if (CHARGEJSON.getString("payChnlType").equals(LePayConfigure.ALIPAY)) {
                             lePayOrderInfoEntity.setPayType(1);
                         }
@@ -139,7 +147,7 @@ public class LePayTools {
      * FIXME
      */
 
-    public static String setResultInfo(String channelCode,String Channel,int status,String msg){
+    public static String setResultInfo(String channelCode, String Channel, int status, String msg) {
         LePayResultEntity lePayResultEntity = new LePayResultEntity();
         Gson gson = new Gson();
         String result = null;
@@ -163,10 +171,9 @@ public class LePayTools {
 
         if (resultStatus.equals("9000")) {  //Payment success
             res = 0;
-        }else if(resultStatus.equals("6001")){ //取消支付
+        } else if (resultStatus.equals("6001")) { //取消支付
             res = -2;
-        }
-        else if (resultStatus.equals("8000")) {  //Payment fail
+        } else if (resultStatus.equals("8000")) {  //Payment fail
             res = 1;
         } else {  //Payment fail
             res = -1;
@@ -176,17 +183,17 @@ public class LePayTools {
 
     /**
      * 页面跳转工具类
-     * 方法名:GotoActivityByBundle
+     * 方法名:gotoActivityByBundle
      * 方法参数:firstActivity,cls,bundle
      * 作者: Thomson King(ouqikang@unionpay95516.com)
      * FIXME
      */
 
-    public static void GotoActivityByBundle(Activity firstActivity, Class cls, Bundle bundle){
+    public static void gotoActivityByBundle(Activity firstActivity, Class cls, Bundle bundle) {
 
         Intent intent = new Intent();
-        intent.setClass(firstActivity,cls);
-        if (bundle!=null){
+        intent.setClass(firstActivity, cls);
+        if (bundle != null) {
             intent.putExtras(bundle);
         }
 
@@ -252,25 +259,25 @@ public class LePayTools {
      * FIXME
      */
 
-    public static String getparams(String paramsKey,String appOrderInfo,String payType){
+    public static String getparams(String paramsKey, String appOrderInfo, String payType) {
 
         String params = "";
 
         try {
-            if (payType.equals(LePayConfigure.ALIPAY)){
+            if (payType.equals(LePayConfigure.ALIPAY)) {
 
                 return params;
 
-            }else if (payType.equals(LePayConfigure.WECARTPAY)){
+            } else if (payType.equals(LePayConfigure.WECARTPAY)) {
 
                 return params;
 
-            } else if (payType.equals(LePayConfigure.QUICKPAY)){
+            } else if (payType.equals(LePayConfigure.QUICKPAY)) {
 
-                if (appOrderInfo!=null&&!appOrderInfo.equals("null")){
+                if (appOrderInfo != null && !appOrderInfo.equals("null")) {
                     JSONObject json = new JSONObject(appOrderInfo);
 
-                    if (json.has(paramsKey)){
+                    if (json.has(paramsKey)) {
                         params = json.getString(paramsKey);
                     }
                 }
@@ -288,6 +295,7 @@ public class LePayTools {
 
     /**
      * 得到自定义的progressDialog
+     *
      * @param context
      * @param msg
      * @return
@@ -306,7 +314,7 @@ public class LePayTools {
 
         animationDrawable.setOneShot(false);
 
-        if(animationDrawable.isRunning())//是否正在运行？
+        if (animationDrawable.isRunning())//是否正在运行？
 
         {
             animationDrawable.stop();//停止
@@ -336,7 +344,7 @@ public class LePayTools {
 
         Date date;
         try {
-            if (dateString!=null&&!dateString.equals("null")){
+            if (dateString != null && !dateString.equals("null")) {
 
                 SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMddhhmmss");
                 date = (Date) sdf1.parse(dateString);
@@ -361,7 +369,7 @@ public class LePayTools {
      * 作者: Thomson King(ouqikang@unionpay95516.com)
      * FIXME
      */
-    public static boolean isMobileNO(String mobiles){
+    public static boolean isMobileNO(String mobiles) {
 
         Pattern p = Pattern.compile("^[1]([3][0-9]{1}|[4][0-9]{1}|[5][0-9]{1}|[7][0-9]{1}|[8][0-9]{1})[0-9]{8}$");
         Matcher m = p.matcher(mobiles);
@@ -376,7 +384,7 @@ public class LePayTools {
      * FIXME
      */
 
-    public static boolean isIdNO(String Id){
+    public static boolean isIdNO(String Id) {
         Pattern p = Pattern.compile("(\\d{14}[0-9xX])|(\\d{17}[0-9xX])");
         Matcher m = p.matcher(Id);
         return m.matches();
@@ -390,16 +398,12 @@ public class LePayTools {
      * FIXME
      */
 
-    public static boolean isCN(String name){
+    public static boolean isCN(String name) {
         Pattern p = Pattern.compile("^[\u4e00-\u9fa5]+$");
         Matcher m = p.matcher(name);
         return m.matches();
 
     }
-
-
-
-
 
 
 }

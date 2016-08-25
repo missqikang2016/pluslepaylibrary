@@ -165,8 +165,6 @@ public class LePayPaymentInputCardNumberActivity extends LePayActivityManager {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
 
-            KLog.d("result="+result);
-
             if (dialog != null && dialog.isShowing())
                 dialog.cancel();
 
@@ -206,7 +204,7 @@ public class LePayPaymentInputCardNumberActivity extends LePayActivityManager {
 
                     bundle.putSerializable("payInfo", payInfo);
 
-                    LePayTools.GotoActivityByBundle(LePayPaymentInputCardNumberActivity.this, LePayPaymentCardAddActivity.class, bundle);
+                    LePayTools.gotoActivityByBundle(LePayPaymentInputCardNumberActivity.this, LePayPaymentCardAddActivity.class, bundle);
 
 
                 } else {

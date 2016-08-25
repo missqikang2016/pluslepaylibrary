@@ -58,7 +58,7 @@ public class LePayJsonFuncation {
      * 方法名:QureyCardsInfo 查询银行卡列表
      * 方法参数:json 字符串
      * 作者: Thomson King(ouqikang@unionpay95516.com)
-     * @return List<T>
+     * @return List
      * @param json
      * FIXME
      */

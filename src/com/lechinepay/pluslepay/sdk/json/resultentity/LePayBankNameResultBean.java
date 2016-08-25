@@ -90,7 +90,7 @@ public class LePayBankNameResultBean implements Serializable{
             this.payChannelList = payChannelList;
         }
 
-        public static class PayChannelListBean {
+        public static class PayChannelListBean implements Serializable{
             private String instId;
             private String instName;
             private String dbcr;

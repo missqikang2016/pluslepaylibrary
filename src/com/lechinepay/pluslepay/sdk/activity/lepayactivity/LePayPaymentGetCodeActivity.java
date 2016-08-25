@@ -263,7 +263,6 @@ public class LePayPaymentGetCodeActivity extends LePayActivityManager {
 
             if (result != null) {
 
-                KLog.d("result="+result);
 
                 LePayQuickPayResultBean lePayQuickPayResultBean = LePayJsonFuncation.QuickPayResult(result);
 
@@ -273,7 +272,7 @@ public class LePayPaymentGetCodeActivity extends LePayActivityManager {
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("pay_result", lePayQuickPayResultBean);
                         bundle.putSerializable("payInfo", payInfo);
-                        LePayTools.GotoActivityByBundle(LePayPaymentGetCodeActivity.this, LePayPaymentResultActivity.class, bundle);
+                        LePayTools.gotoActivityByBundle(LePayPaymentGetCodeActivity.this, LePayPaymentResultActivity.class, bundle);
                         destoryActivity();
                     }else{
 
@@ -315,7 +314,7 @@ public class LePayPaymentGetCodeActivity extends LePayActivityManager {
 
             String dbcr = payInfo.getDbcr();
             try {
-                result = lePayControllerManage.getSMSVerificationCode("1.0.0", "UTF-8", "", LePayConfigure.LEPAY_MCHID, LePayConfigure.LEPAY_CMPAPPID, payInfo.getTradeNo(), payInfo.getToken(), payInfo.getProductCode(), payInfo.getBankCardNo(), payInfo.getIdName(), payInfo.getIdCardNo(), payInfo.getMobile(), payInfo.getCardYear(), payInfo.getCardMonth(), payInfo.getCvNum(),dbcr);
+                result = lePayControllerManage.getSMSVerificationCode("1.0.0", "UTF-8", "", LePayConfigure.LEPAY_MCHID, LePayConfigure.LEPAY_CMPAPPID, payInfo.getTradeNo(), payInfo.getToken(), payInfo.getProductCode(), payInfo.getBankCardNo(), payInfo.getIdName(), payInfo.getIdCardNo(), payInfo.getMobile(), payInfo.getCardYear(), payInfo.getCardMonth(), payInfo.getCvNum(),dbcr,payInfo.getBuyerId());
 
             }catch (Exception e){
                 e.printStackTrace();
@@ -330,6 +329,7 @@ public class LePayPaymentGetCodeActivity extends LePayActivityManager {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
+
             if (dialog!=null&&dialog.isShowing())
                 dialog.cancel();
             if (result != null) {
@@ -345,7 +345,7 @@ public class LePayPaymentGetCodeActivity extends LePayActivityManager {
                         payTypeTradeNo = lePaySendCodeResultBean.getPayTypeTradeNo();
 
                     } else {
-                        Toast.makeText(LePayPaymentGetCodeActivity.this, "短信发送失败", Toast.LENGTH_LONG).show();
+                        Toast.makeText(LePayPaymentGetCodeActivity.this, lePaySendCodeResultBean.getRespMsg(), Toast.LENGTH_LONG).show();
                         time.cancel();
                         lepayBT_getCode_ReSend.setText("发送验证码");
                         lepayBT_getCode_ReSend.setClickable(true);
@@ -353,7 +353,15 @@ public class LePayPaymentGetCodeActivity extends LePayActivityManager {
                         lepayLV_getCode_Tip.setVisibility(View.GONE);
                     }
 
+                }else{
+
+                    Toast.makeText(LePayPaymentGetCodeActivity.this, "参数错误或系统连接失败", Toast.LENGTH_LONG).show();
+
                 }
+            }else{
+
+                Toast.makeText(LePayPaymentGetCodeActivity.this, "参数错误或系统连接失败", Toast.LENGTH_LONG).show();
+
             }
 
 
@@ -407,7 +415,7 @@ public class LePayPaymentGetCodeActivity extends LePayActivityManager {
                         payTypeTradeNo = lePaySendCodeResultBean.getPayTypeTradeNo();
 
                     } else {
-                        Toast.makeText(LePayPaymentGetCodeActivity.this, "短信发送失败", Toast.LENGTH_LONG).show();
+                        Toast.makeText(LePayPaymentGetCodeActivity.this, lePaySendCodeResultBean.getRespMsg(), Toast.LENGTH_LONG).show();
                         time.cancel();
                         lepayBT_getCode_ReSend.setText("发送验证码");
                         lepayBT_getCode_ReSend.setClickable(true);
@@ -416,7 +424,16 @@ public class LePayPaymentGetCodeActivity extends LePayActivityManager {
 
                     }
 
+                }else{
+
+                    Toast.makeText(LePayPaymentGetCodeActivity.this, "参数错误或系统连接失败", Toast.LENGTH_LONG).show();
+
                 }
+
+            }else{
+
+                Toast.makeText(LePayPaymentGetCodeActivity.this, "参数错误或系统连接失败", Toast.LENGTH_LONG).show();
+
             }
 
 

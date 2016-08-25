@@ -145,7 +145,7 @@ public class LePayChannelsPay {
             mLePayOrderInfoEntity.setSuccess(isSuccess);
             Bundle bundle = new Bundle();
             bundle.putSerializable("payInfo", mLePayOrderInfoEntity);
-            LePayTools.GotoActivityByBundle(mActivity, LePayPaymentResultActivity.class,bundle);
+            LePayTools.gotoActivityByBundle(mActivity, LePayPaymentResultActivity.class,bundle);
 
         }
 
@@ -173,7 +173,7 @@ public class LePayChannelsPay {
 
         }else{
 
-            LePayTools.GotoActivityByBundle(mActivity,LePayPaymentInputCardNumberActivity.class,bundle);
+            LePayTools.gotoActivityByBundle(mActivity,LePayPaymentInputCardNumberActivity.class,bundle);
 
         }
 
@@ -251,11 +251,11 @@ public class LePayChannelsPay {
 
                     if (bankCardslist.isEmpty()){
 
-                        LePayTools.GotoActivityByBundle(mActivity,LePayPaymentInputCardNumberActivity.class,bundle);
+                        LePayTools.gotoActivityByBundle(mActivity,LePayPaymentInputCardNumberActivity.class,bundle);
 
                     }else{
 
-                        LePayTools.GotoActivityByBundle(mActivity, LePayPayMentCardListActivity.class,bundle);
+                        LePayTools.gotoActivityByBundle(mActivity, LePayPayMentCardListActivity.class,bundle);
 
                     }
 
