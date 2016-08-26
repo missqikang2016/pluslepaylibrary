@@ -1,7 +1,6 @@
 package com.lechinepay.pluslepay.sdk.controller;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.util.Log;
 
@@ -12,7 +11,6 @@ import com.lechinepay.pluslepay.sdk.Entity.LePayResultEntity;
 import com.lechinepay.pluslepay.sdk.listener.ChannelsPayListener;
 import com.lechinepay.pluslepay.sdk.listener.LePaySendPayCallBack;
 import com.lechinepay.pluslepay.sdk.pay.LePayChannelsPay;
-import com.lechinepay.pluslepay.tools.LePayLogTool;
 import com.lechinepay.pluslepay.tools.LePayTools;
 import com.lechinepay.pluslepaytoolsdk.controller.config.LePayDataPool;
 import com.socks.library.KLog;
@@ -33,19 +31,17 @@ public class LePayController {
      * 方法名:initLePayController 传入MCHID和CMPAPPID进行初始化
      * 方法参数: MCHID，CMPAPPID
      * 作者: Thomson King(ouqikang@unionpay95516.com)
-     * @return boolean
-     * @param scienceType 1=自验https，2=自验http，3=测试https，4=测试http
      * FIXME
+     * @return boolean
      */
 
-    public static boolean initLePayController(Context context, String MCHID, String CMPAPPID, boolean isDeBug,int scienceType) {
+    public static boolean initLePayController(Context context, String MCHID, String CMPAPPID, boolean isDeBug) {
 
         boolean isInit = false;
         LePayConfigure.LEPAY_MCHID = MCHID;
         LePayConfigure.LEPAY_CMPAPPID = CMPAPPID;
         LePayConfigure.LEPAY_CONTEXT = context;
         KLog.init(isDeBug);
-        LePayDataPool.setLePayURL(scienceType);
         try {
             LePayTools.saveToSDCard();
             isInit = true;
@@ -61,11 +57,11 @@ public class LePayController {
      * 方法名:lePaySendPay 开发者调用此方法实现支付宝支付，微信支付和银行卡快捷支付。
      * 方法参数:activity，Charge，BuyerId，lePaySendPayCallBack
      * 作者: Thomson King(ouqikang@unionpay95516.com)
-     * @param activity 调用的Activity
-     * @param Charge 订单信息
-     * @param BuyerId 用户id
-     * @param lePaySendPayCallBack
-     * FIXME
+     *
+     * @param activity             调用的Activity
+     * @param Charge               订单信息
+     * @param BuyerId              用户id
+     * @param lePaySendPayCallBack FIXME
      */
 
     public static void lePaySendPay(Activity activity, String Charge, String BuyerId, final LePaySendPayCallBack lePaySendPayCallBack) {
@@ -79,7 +75,7 @@ public class LePayController {
 
             if (lePayOrderInfoEntity != null) {
 
-                if (lePayOrderInfoEntity.getRespCode() != null){
+                if (lePayOrderInfoEntity.getRespCode() != null) {
 
                     if (lePayOrderInfoEntity.getRespCode().equals("000000")) {
 
@@ -100,7 +96,7 @@ public class LePayController {
                             @Override
                             public void OnChannelsPayEnd(String result) {
 
-                                if (result != null){
+                                if (result != null) {
 
                                     Gson gson = new Gson();
 
@@ -118,10 +114,9 @@ public class LePayController {
 
                                     KLog.d("支付结束，支付结果=" + result);
 
-                                }else{
+                                } else {
                                     lePaySendPayCallBack.OnPayFinished(lePayOrderInfoEntity.getPayType(), false, LePayTools.setResultInfo("777", "获取失败", 777, "服务器异常"));
                                 }
-
 
 
                             }
@@ -134,7 +129,7 @@ public class LePayController {
                         KLog.d("支付异常，" + lePayOrderInfoEntity.getRespMsg());
                     }
 
-                }else{
+                } else {
 
                     lePaySendPayCallBack.OnPayFinished(3, false, LePayTools.setResultInfo("999", "获取失败", 999, "Charge异常"));
                     KLog.d("支付异常，Charge异常");
